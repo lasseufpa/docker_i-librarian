@@ -3,7 +3,6 @@ FROM debian:jessie
 MAINTAINER Cyril Grima <cyril.grima@gmail.com>
 
 # Environment variables
-ENV ILIB_VERSION 4.8
 ENV UID 33
 ENV GID 33
 
@@ -27,7 +26,7 @@ RUN apt-get update && apt-get install -y --force-yes\
     php7.0-zip\
     sqlite3\
     tesseract-ocr\
-    xz-utils\
+    unzip\
  && apt-get clean
 
 # Update php.ini
@@ -36,10 +35,10 @@ RUN sed -i "s/short_open_tag = Off/short_open_tag = On/" /etc/php/7.0/apache2/ph
  && sed -i "s/\; max_input_vars = 1000/max_input_vars = 10000/" /etc/php/7.0/apache2/php.ini
 
 # Install I-Librarian
-RUN mkdir -p /var/www/html/librarian \
- && curl https://i-librarian.net/downloads/I,-Librarian-${ILIB_VERSION}-Linux.tar.xz \
+RUN curl -L https://github.com/lasseufpa/i-librarian/archive/master.zip \
     --output i-librarian.tar.xz \
- && tar -xvf i-librarian.tar.xz -C /var/www/html/librarian \
+ && unzip i-librarian.tar.xz -d /var/www/html \
+ && mv /var/www/html/i-librarian-master /var/www/html/librarian \
  && rm i-librarian.tar.xz \
  && ln -s /var/www/html/librarian/library /library
 
